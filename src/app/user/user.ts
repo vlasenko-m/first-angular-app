@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { DUMMY_USERS } from '../../constants/damy-users';
 
 @Component({
@@ -8,14 +8,12 @@ import { DUMMY_USERS } from '../../constants/damy-users';
   styleUrl: './user.css',
 })
 export class UserConponent {
-  selectidUser = this.getRandomUser();
+  selectidUser = signal(this.getRandomUser());
+  imagePath = computed(() => `assets/users/${this.selectidUser().avatar}`);
 
-  get imagePath() {
-    return 'assets/users/' + this.selectidUser.avatar;
-  }
 
   onUserClick() {
-    this.selectidUser = this.getRandomUser();
+    this.selectidUser.set(this.getRandomUser());
   }
 
   private getRandomUser() {
