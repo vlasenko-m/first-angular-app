@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DUMMY_USERS } from '../../constants/damy-users';
 
 @Component({
@@ -8,16 +8,17 @@ import { DUMMY_USERS } from '../../constants/damy-users';
   styleUrl: './user.css',
 })
 export class UserConponent {
-  selectidUser = signal(this.getRandomUser());
-  imagePath = computed(() => `assets/users/${this.selectidUser().avatar}`);
+  @Input({ required: true }) id!: string;
+  @Input({ required: true }) avatar!: string;
+  @Input({ required: true }) name!: string;
 
+  @Output() select = new EventEmitter<string>();  //selct = output<string>();
 
-  onUserClick() {
-    this.selectidUser.set(this.getRandomUser());
+  get imagePath() {
+    return `assets/users/${this.avatar}`;
   }
 
-  private getRandomUser() {
-    const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length);
-    return DUMMY_USERS[randomIndex];
+  onUserClick() {
+ this.select.emit(this.id);
   }
 }
