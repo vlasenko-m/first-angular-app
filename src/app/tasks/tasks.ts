@@ -1,7 +1,7 @@
 import { Component, Input, signal } from '@angular/core';
 import { Task } from './task/task';
-import { DUMMY_TASKS } from '../../constants/dumy-tasks';
 import { AddTask } from './add-task/add-task';
+import { TaskService } from './task.service';
 import { CreateTask } from './model';
 
 @Component({
@@ -13,34 +13,22 @@ import { CreateTask } from './model';
 export class Tasks {
   @Input() userId!: string;
   @Input({ required: true }) name!: string;
-  
+
+  constructor(private taskService: TaskService) {}
+
   isAddingTask = signal(false);
 
-  onAddTask() {
+  onOpenAddTaskModal() {
     this.isAddingTask.set(true);
   }
 
-  onCancelAddTask() {
-    this.isAddingTask.set(false);
-  }
-
-  onCloseAddTask(task: CreateTask) {
-    DUMMY_TASKS.unshift({
-      id: crypto.randomUUID(),
-      userId: this.userId,
-      title: task.title,
-      summary: task.summary,
-      dueDate: task.dueDate || new Date().toISOString().split('T')[0],
-    });
-
+  onCloseAddTaskModal() {
     this.isAddingTask.set(false);
   }
 
   get userTasks() {
-    return DUMMY_TASKS.filter((task) => task.userId === this.userId);
+    return this.taskService.getTasksForUser(this.userId);
   }
 
-  onMarkAsComplete(taskId: string) {
-    DUMMY_TASKS.splice( DUMMY_TASKS.findIndex((t) => t.id === taskId), 1);
-  }
+
 }

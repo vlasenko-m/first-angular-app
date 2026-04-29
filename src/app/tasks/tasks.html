@@ -3,10 +3,10 @@
     <h2>{{ name }}'s Tasks</h2>
 
     @if (isAddingTask()) {
-      <app-add-task (addTask)="onCloseAddTask($event)" (cancel)="onCancelAddTask()"></app-add-task>
+      <app-add-task [userId]="userId" (cancel)="onCloseAddTaskModal()"></app-add-task>
     } @else {
       <menu>
-        <button (click)="onAddTask()">Add Task</button>
+        <button (click)="onOpenAddTaskModal()">Add Task</button>
       </menu>
     }
   </header>
@@ -14,7 +14,7 @@
   <ul>
     <li>
       @for (task of userTasks; track task.id) {
-        <app-task [task]="task" (markAsComplete)="onMarkAsComplete($event)" />
+        <app-task [task]="task" />
       }
     </li>
   </ul>
