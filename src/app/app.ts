@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header';
 import { UserConponent } from './user/user';
@@ -13,16 +13,14 @@ import { Tasks } from './tasks/tasks';
 })
 export class App {
   protected readonly title = signal('firts-angular-app');
-  
-  selectedUserName = signal('');
-  
   users = DUMMY_USERS;
 
-  onSelectUser(userId: string) {
-    const selectedUser = this.users.find(user => user.id === userId);
-    if (selectedUser) {
-      this.selectedUserName.set(selectedUser.name);
-    }
+  selectedUserId = signal('');
 
+  selectedUser = computed(() => this.users.find((user) => user.id === this.selectedUserId()));
+  selectedUserName = computed(() => this.selectedUser()?.name ?? '');
+
+  onSelectUser(userId: string) {
+    this.selectedUserId.set(userId);
   }
 }
